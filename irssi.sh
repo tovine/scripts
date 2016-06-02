@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ "$1" == "background" ]; then
-	BACKGROUND=True
+	BACKGROUND=true
 fi
 if ! screen -list | grep -q "irssi"; then
 	if $BACKGROUND; then
