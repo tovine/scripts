@@ -8,26 +8,27 @@
 # ---------------------------------         #
 # # # # # # # # # # # # # # # # # # # # # # #
 
-if [ `pidof spotify` ]; then
-	if [ $1 ]; then
-		case $1 in
+export DISPLAY=:0
+
+if [ "$(pidof spotify)" ]; then
+	case $1 in
 		play)
-		dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+		dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause > /dev/null
 		;;
 		stop)
-		dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Stop
+		dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Stop > /dev/null
 		;;
 		skip)
-		dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+		dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next > /dev/null
 		;;
 		back)
-		dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
-		dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
+		dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous > /dev/null
+		dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous > /dev/null
 		;;
-		esac
-	else
-		echo -e "\e[1;31mSpotify kjører allerede - ikke start en ny nå, da blir det bare derp...\e[0m"
-	fi
+		*)
+		echo "Ukjent kommando, prøv 'play' (play/pause), 'stop', 'skip' eller 'back'"
+		;;
+	esac
 else
 	if [ $DISPLAY ]; then
 		echo "Starter Spotify..."
