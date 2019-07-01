@@ -2,10 +2,13 @@
 
 CPUTHREADS=4
 QUALITY="-qscale:a 0"
+if [ -z "$SRC_EXT" ]; then
+	SRC_EXT="flac"
+fi
 
 function usage()
 {
-    echo "Converts all .flac files in a given directory into .mp3"
+    echo "Converts all .$SRC_EXT files in a given directory into .mp3"
     echo "Options:"
     echo "\t-h --help"
     echo "\t-t --threads= (default: $CPUTHREADS)"
@@ -15,10 +18,11 @@ function usage()
 
 # TODO: actually parse arguments (see https://gist.github.com/jehiah/855086)
 
+# Keep track of the number of concurrent transcodings
 C=0
 
-for a in ./*.flac; do
-	MP3NAME="${a[@]/%flac/mp3}"
+for a in ./*.$SRC_EXT; do
+	MP3NAME="${a[@]/%$SRC_EXT/mp3}"
 	if [ -e "$MP3NAME" ]; then
 		if [ "$(read  -rs -N 1 -p "File \"$MP3NAME\" already exists, overwrite?[yN]" ANSWER && echo $ANSWER)" == "y" ]; then
 			echo ""
@@ -37,3 +41,6 @@ for a in ./*.flac; do
 		(( C--))
 	fi
 done
+
+# Wait for ongoing conversions to complete
+wait
